@@ -7,20 +7,32 @@ export default function Page() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("http://192.168.0.13/api/data.php")
+    fetch("http://192.168.0.13/pistop/data.php")
       .then(res => res.json())
       .then(json => setData(json))
       .catch(err => console.log(err));
   }, []);
+
+  const getCrowdStatus = (count) => {
+    if (count <= 10) {
+      return { label: "Mala gužva", color: "#16a34a" };
+    }
+
+    if (count <= 25) {
+      return { label: "Srednja gužva", color: "#facc15" };
+    }
+
+    return { label: "Velika gužva", color: "#dc2626" };
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Pi Stop 🚌</Text>
+        <Text style={styles.title}>Pi Stop 👋</Text>
         <Text style={styles.subtitle}>
-          Informacije za javni prevoz na dlanu!
+          Informacije za javni prevoz na dlanu
         </Text>
       </View>
 
@@ -28,20 +40,31 @@ export default function Page() {
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.sectionTitle}>Dolasci</Text>
 
-        {data.map(item => (
+        {data.map(item => {
+
+          let crowd = getCrowdStatus(item.face_count);
+
+          return (
+
           <View key={item.id} style={styles.card}>
             <View>
-              <Text style={styles.line}>{item.line_number} 🚌</Text>
+              <Text style={styles.line}>{item.line_number}</Text>
               <Text style={styles.route}>
                 {item.line_start} → {item.line_end}
               </Text>
             </View>
 
+            <View style={[styles.badge, { backgroundColor: crowd.color + "20" }]}>
+              <Text style={[styles.badgeText, { color: crowd.color }]}>
+                {crowd.label}
+              </Text>
+            </View>
+            
             <View style={styles.badge}>
               <Text style={styles.badgeText}>LIVE</Text>
             </View>
           </View>
-        ))}
+        )})}
       </ScrollView>
 
       {/* Bottom Navigation */}
@@ -67,10 +90,11 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingVertical: 16,
+    marginBottom: 16
   },
 
   title: {
-    fontSize: 28,
+    fontSize: 36,
     fontWeight: "700",
     color: "#0f172a",
   },

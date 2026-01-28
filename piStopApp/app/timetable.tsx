@@ -5,11 +5,12 @@ export default function timetable() {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch("http://192.168.0.13/api/data.php")
+    fetch("http://192.168.0.13/pistop/data.php")
       .then(res => res.json())
       .then(json => setData(json))
       .catch(err => console.log(err));
   }, []);
+
 
   return (
     <View style={styles.container}>
@@ -22,7 +23,7 @@ export default function timetable() {
             <Text style={styles.name}>{item.line_start} - {item.line_end}</Text>
           </View>
           <View>
-            <Text style={{fontSize: 30}}>›</Text>
+            <Text style={{ fontSize: 30 }}>›</Text>
           </View>
         </View>
       ))}
@@ -66,4 +67,7 @@ const styles = StyleSheet.create({
     color: "#444",
     marginTop: 4,
   },
+  crowded: {
+
+  }
 });
