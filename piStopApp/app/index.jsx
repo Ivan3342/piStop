@@ -17,11 +17,11 @@ export default function Page() {
   }, []);
 
   const getCrowdStatus = (count) => {
-    if (count <= 10) {
+    if (count <= 18) {
       return { label: "Mala gužva", color: "#22c55e" };
     }
 
-    if (count <= 25) {
+    if (count <= 35) {
       return { label: "Srednja gužva", color: "#eab308" };
     }
 
@@ -55,11 +55,11 @@ export default function Page() {
         </Text>
 
         {data.map(item => {
-          let crowd = getCrowdStatus(item.face_count);
+          let crowd = getCrowdStatus(item.FACE_COUNT);
 
           return (
             <View
-              key={item.id}
+              key={item.ID}
               style={[
                 styles.card,
                 { backgroundColor: theme.card, shadowColor: theme.shadow }
@@ -67,10 +67,10 @@ export default function Page() {
             >
               <View>
                 <Text style={[styles.line, { color: theme.primary }]}>
-                  {item.line_number}
+                  {item.LINE_NUMBER}
                 </Text>
                 <Text style={[styles.route, { color: theme.subtext }]}>
-                  {item.line_start} → {item.line_end}
+                  {item.LINE_START} → {item.LINE_END}
                 </Text>
               </View>
 
@@ -82,6 +82,10 @@ export default function Page() {
               >
                 <Text style={[styles.badgeText, { color: crowd.color }]}>
                   {crowd.label}
+                </Text>
+
+                <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
+                  {item.FACE_COUNT} / {item.CAPACITY}
                 </Text>
               </View>
             </View>

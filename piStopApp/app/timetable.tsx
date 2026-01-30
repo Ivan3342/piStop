@@ -17,10 +17,10 @@ export default function timetable() {
       <Text style={styles.title}>Autobuske Linije</Text>
 
       {data.map(item => (
-        <View key={item.id} style={styles.card}>
+        <View key={item.ID} style={styles.card}>
           <View>
-            <Text style={styles.line}>{item.line_number}</Text>
-            <Text style={styles.name}>{item.line_start} - {item.line_end}</Text>
+            <Text style={styles.line}>{item.LINE_NUMBER}</Text>
+            <Text style={styles.name}>{item.LINE_START} - {item.LINE_END}</Text>
           </View>
           <View>
             <Text style={{ fontSize: 30 }}>›</Text>
