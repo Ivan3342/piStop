@@ -5,6 +5,9 @@ import { useState, useEffect } from "react";
 
 export default function Page() {
   const [data, setData] = useState([]);
+  const [dark, setDark] = useState(false);
+
+  const theme = dark ? darkTheme : lightTheme;
 
   useEffect(() => {
     fetch("http://192.168.0.13/pistop/data.php")
@@ -15,173 +18,199 @@ export default function Page() {
 
   const getCrowdStatus = (count) => {
     if (count <= 10) {
-      return { label: "Mala gužva", color: "#16a34a" };
+      return { label: "Mala gužva", color: "#22c55e" };
     }
 
     if (count <= 25) {
-      return { label: "Srednja gužva", color: "#facc15" };
+      return { label: "Srednja gužva", color: "#eab308" };
     }
 
-    return { label: "Velika gužva", color: "#dc2626" };
+    return { label: "Velika gužva", color: "#ef4444" };
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
+
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Pi Stop 👋</Text>
-        <Text style={styles.subtitle}>
-          Informacije za javni prevoz na dlanu
-        </Text>
+        <View>
+          <Text style={[styles.title, { color: theme.text }]}>Pi Stop 👋</Text>
+          <Text style={[styles.subtitle, { color: theme.subtext }]}>
+            Informacije za javni prevoz na dlanu
+          </Text>
+        </View>
+
+        {/* Theme toggle */}
+        <Pressable onPress={() => setDark(!dark)}>
+          <Text style={{ fontSize: 22 }}>
+            {dark ? "🌞" : "🌙"}
+          </Text>
+        </Pressable>
       </View>
 
       {/* Content */}
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.sectionTitle}>Dolasci</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>
+          Dolasci
+        </Text>
 
         {data.map(item => {
-
           let crowd = getCrowdStatus(item.face_count);
 
           return (
+            <View
+              key={item.id}
+              style={[
+                styles.card,
+                { backgroundColor: theme.card, shadowColor: theme.shadow }
+              ]}
+            >
+              <View>
+                <Text style={[styles.line, { color: theme.primary }]}>
+                  {item.line_number}
+                </Text>
+                <Text style={[styles.route, { color: theme.subtext }]}>
+                  {item.line_start} → {item.line_end}
+                </Text>
+              </View>
 
-          <View key={item.id} style={styles.card}>
-            <View>
-              <Text style={styles.line}>{item.line_number}</Text>
-              <Text style={styles.route}>
-                {item.line_start} → {item.line_end}
-              </Text>
+              <View
+                style={[
+                  styles.badge,
+                  { backgroundColor: crowd.color + "22" }
+                ]}
+              >
+                <Text style={[styles.badgeText, { color: crowd.color }]}>
+                  {crowd.label}
+                </Text>
+              </View>
             </View>
-
-            <View style={[styles.badge, { backgroundColor: crowd.color + "20" }]}>
-              <Text style={[styles.badgeText, { color: crowd.color }]}>
-                {crowd.label}
-              </Text>
-            </View>
-            
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>LIVE</Text>
-            </View>
-          </View>
-        )})}
+          );
+        })}
       </ScrollView>
 
-      {/* Bottom Navigation */}
-      <View style={styles.navigation}>
-        <Link href="/timetable" style={styles.navItem}>
-          Red vožnje
-        </Link>
-
-        <Link href="#" style={styles.navItemSecondary}>
-          Test
+      {/* Bottom Button */}
+      <View style={[styles.bottomBar, { backgroundColor: theme.card }]}>
+        <Link href="/timetable" asChild>
+          <Pressable style={[styles.button, { backgroundColor: theme.primary }]}>
+            <Text style={[styles.buttonText, {color: theme.text}]}>Red vožnje</Text>
+          </Pressable>
         </Link>
       </View>
+
     </SafeAreaView>
   );
 }
 
+const lightTheme = {
+  bg: "#f5f7fb",
+  card: "#ffffff",
+  text: "#0f172a",
+  subtext: "#64748b",
+  primary: "#2563eb",
+  shadow: "#000",
+};
+
+const darkTheme = {
+  bg: "#020617",
+  card: "#020617",
+  text: "#f8fafc",
+  subtext: "#94a3b8",
+  primary: "#3b82f6",
+  shadow: "#000",
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f7fb",
   },
 
   header: {
     paddingHorizontal: 20,
     paddingVertical: 16,
-    marginBottom: 16
+    marginBottom: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   title: {
-    fontSize: 36,
-    fontWeight: "700",
-    color: "#0f172a",
+    fontSize: 34,
+    fontWeight: "800",
   },
 
   subtitle: {
-    fontSize: 15,
-    color: "#64748b",
-    marginTop: 4,
+    fontSize: 14,
+    marginTop: 2,
   },
 
   content: {
     paddingHorizontal: 20,
-    paddingBottom: 120,
+    paddingBottom: 140,
   },
 
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#0f172a",
+    fontWeight: "700",
     marginBottom: 12,
   },
 
   card: {
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
+    borderRadius: 18,
     padding: 16,
     marginBottom: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
 
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 4,
   },
 
   line: {
     fontSize: 26,
-    fontWeight: "800",
-    color: "#2563eb",
+    fontWeight: "900",
   },
 
   route: {
     fontSize: 14,
-    color: "#475569",
     marginTop: 2,
   },
 
   badge: {
-    backgroundColor: "#dcfce7",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     borderRadius: 999,
   },
 
   badgeText: {
     fontSize: 12,
-    fontWeight: "700",
-    color: "#16a34a",
+    fontWeight: "800",
   },
 
-  navigation: {
+  bottomBar: {
     position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
 
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-
-    backgroundColor: "#ffffff",
-    paddingVertical: 14,
+    padding: 16,
     borderTopWidth: 1,
-    borderTopColor: "#e5e7eb",
+    borderTopColor: "#1e293b22",
   },
 
-  navItem: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#2563eb",
+  button: {
+    borderRadius: 16,
+    paddingVertical: 14,
+    alignItems: "center",
   },
 
-  navItemSecondary: {
+  buttonText: {
     fontSize: 16,
-    fontWeight: "500",
-    color: "#64748b",
+    fontWeight: "800",
+    letterSpacing: 0.4,
+    textAlign: "center"
   },
 });
