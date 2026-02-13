@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 export default function timetable() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     fetch("http://192.168.0.13/pistop/data.php")

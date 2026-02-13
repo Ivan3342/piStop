@@ -4,7 +4,7 @@
     "slug": "piStopApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Gemini_Generated_Image_afyus6afyus6afyu.png",
+    "icon": "./assets/images/gani.png",
     "scheme": "pistopapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -23,7 +23,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/Gemini_Generated_Image_afyus6afyus6afyu.png"
+      "favicon": "./assets/images/gani.png"
     },
     "plugins": [
       "expo-router",

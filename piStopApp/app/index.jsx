@@ -1,5 +1,5 @@
-import { Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Pressable, StyleSheet, Text, View, ScrollView, Switch, Button, Image } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
 import { useState, useEffect } from "react";
 
@@ -7,12 +7,14 @@ export default function Page() {
   const [data, setData] = useState([]);
   const [dark, setDark] = useState(false);
 
+  const user = "Ivan";
+
   const theme = dark ? darkTheme : lightTheme;
 
   useEffect(() => {
-    fetch("http://192.168.0.13/pistop/data.php")
+    fetch("http://bus.prvatehnicka.edu.rs/api/get_bus_lines.php")
       .then(res => res.json())
-      .then(json => setData(json))
+      .then(json => setData(json.data))
       .catch(err => console.log(err));
   }, []);
 
@@ -29,80 +31,90 @@ export default function Page() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
+    <SafeAreaProvider>
+      <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
 
-      {/* Header */}
-      <View style={styles.header}>
-        <View>
-          <Text style={[styles.title, { color: theme.text }]}>Pi Stop 👋</Text>
-          <Text style={[styles.subtitle, { color: theme.subtext }]}>
-            Informacije za javni prevoz na dlanu
-          </Text>
+        {/* Header */}
+        <View style={styles.header}>
+          <View>
+            <Text style={[styles.title, { color: theme.text }]}>Zdravo, {user} 👋</Text>
+            <Text style={[styles.subtitle, { color: theme.subtext }]}>
+              Informacije za javni prevoz na dlanu
+            </Text>
+          </View>
+
+          {/* Theme toggle */}
+          <Pressable onPress={() => setDark(!dark)}>
+            <Image
+              style={{ width: 54, height: 54 }}
+              source={
+                dark
+                  ? require("../assets/images/sun-svgrepo-com.svg")
+                  : require("../assets/images/moon-svgrepo-com.svg")
+              }
+            />
+          </Pressable>
+
+          <Switch onValueChange={(value) => setDark(value)} value={dark} />
+
         </View>
 
-        {/* Theme toggle */}
-        <Pressable onPress={() => setDark(!dark)}>
-          <Text style={{ fontSize: 22 }}>
-            {dark ? "🌞" : "🌙"}
+        {/* Content */}
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>
+            Dolasci
           </Text>
-        </Pressable>
-      </View>
 
-      {/* Content */}
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>
-          Dolasci
-        </Text>
+          {data.map(item => {
+            let crowd = getCrowdStatus(item.face_count);
 
-        {data.map(item => {
-          let crowd = getCrowdStatus(item.FACE_COUNT);
-
-          return (
-            <View
-              key={item.ID}
-              style={[
-                styles.card,
-                { backgroundColor: theme.card, shadowColor: theme.shadow }
-              ]}
-            >
-              <View>
-                <Text style={[styles.line, { color: theme.primary }]}>
-                  {item.LINE_NUMBER}
-                </Text>
-                <Text style={[styles.route, { color: theme.subtext }]}>
-                  {item.LINE_START} → {item.LINE_END}
-                </Text>
-              </View>
-
+            return (
               <View
+                key={item.line_name + 1}
                 style={[
-                  styles.badge,
-                  { backgroundColor: crowd.color + "22" }
+                  styles.card,
+                  { backgroundColor: theme.card, shadowColor: theme.shadow }
                 ]}
               >
-                <Text style={[styles.badgeText, { color: crowd.color }]}>
-                  {crowd.label}
-                </Text>
+                <View>
+                  <Text style={[styles.line, { color: theme.primary }]}>
+                    {item.line_name}
+                  </Text>
+                  <Text style={[styles.route, { color: theme.subtext }]}>
+                    {item.line_start} → {item.line_end}
+                  </Text>
+                </View>
 
-                <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
-                  {item.FACE_COUNT} / {item.CAPACITY}
-                </Text>
+                <View
+                  style={[
+                    styles.badge,
+                    { backgroundColor: crowd.color + "22" }
+                  ]}
+                >
+                  <Text style={[styles.badgeText, { color: crowd.color }]}>
+                    {crowd.label}
+                  </Text>
+
+                  <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
+                    {item.face_count} / {item.capacity}
+                  </Text>
+                </View>
               </View>
-            </View>
-          );
-        })}
-      </ScrollView>
+            );
+          })}
+        </ScrollView>
 
-      {/* Bottom Button */}
-      <View style={[styles.bottomBar, { backgroundColor: theme.card }]}>
-        <Link href="/timetable" asChild>
-          <Pressable style={[styles.button, { backgroundColor: theme.primary }]}>
-            <Text style={[styles.buttonText, {color: theme.text}]}>Red vožnje</Text>
-          </Pressable>
-        </Link>
-      </View>
+        {/* Bottom Button */}
+        <View style={[styles.bottomBar, { backgroundColor: theme.card }]}>
+          <Link href="/timetable" asChild>
+            <Pressable style={[styles.button, { backgroundColor: theme.primary }]}>
+              <Text style={[styles.buttonText, { color: theme.text }]}>Red vožnje</Text>
+            </Pressable>
+          </Link>
+        </View>
 
-    </SafeAreaView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -181,6 +193,7 @@ const styles = StyleSheet.create({
   route: {
     fontSize: 14,
     marginTop: 2,
+    width: 200,
   },
 
   badge: {
@@ -200,7 +213,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
 
-    padding: 16,
+    paddingTop: 16,
+    paddingBottom: 36,
+    paddingLeft: 16,
+    paddingRight: 16,
     borderTopWidth: 1,
     borderTopColor: "#1e293b22",
   },
