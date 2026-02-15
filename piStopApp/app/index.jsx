@@ -18,17 +18,16 @@ export default function Page() {
   useEffect(() => {
     fetch("http://bus.prvatehnicka.edu.rs/api/get_bus_lines.php")
       .then(res => res.json())
-      .then(rawJson => rawJson.data)
-      .then(json => setData(json))
+      .then(json => setData(json.data || []))
       .catch(err => console.log(err));
   }, []);
 
-  const getCrowdStatus = (count) => {
-    if (count <= 18) {
+  const getCrowdStatus = (occupancy_percent) => {
+    if (occupancy_percent <= 25) {
       return { label: "Mala gužva", color: "#22c55e" };
     }
 
-    if (count <= 35) {
+    if (occupancy_percent <= 35) {
       return { label: "Srednja gužva", color: "#eab308" };
     }
 
@@ -64,42 +63,51 @@ export default function Page() {
           <Text style={[styles.sectionTitle, { color: theme.text }]}>
             Dolasci
           </Text>
-
-          {data.map(item => {
-            let crowd = getCrowdStatus(item.face_count);
+          
+          { data.length === 0 ? (
+              <View style={{ alignItems: 'center', marginTop: 40 }}>
+                <Text style={{ color: theme.subtext, fontSize: 18 }}>
+                  Nema linija uskoro! 😔
+                </Text>
+              </View>) : (<Text></Text>)
+          }
+          {
+          data.map(item => {
+            let crowd = getCrowdStatus(item.occupancy_percent);
 
             return (
-              <View
-                key={item.line_name + 1}
-                style={[
-                  styles.card,
-                  { backgroundColor: theme.card, shadowColor: theme.shadow }
-                ]}
-              >
-                <View>
-                  <Text style={[styles.line, { color: theme.primary }]}>
-                    {item.line_name}
-                  </Text>
-                  <Text style={[styles.route, { color: theme.subtext }]}>
-                    {item.line_start} → {item.line_end}
-                  </Text>
-                </View>
+              
+             <View
+               key={item.line_name + 1}
+               style={[
+                 styles.card,
+                 { backgroundColor: theme.card, shadowColor: theme.shadow }
+               ]}
+             >
+               <View>
+                 <Text style={[styles.line, { color: theme.primary }]}>
+                   {item.line_name}
+                 </Text>
+                 <Text style={[styles.route, { color: theme.subtext }]}>
+                   {item.line_start} → {item.line_end}
+                 </Text>
+               </View>
 
-                <View
-                  style={[
-                    styles.badge,
-                    { backgroundColor: crowd.color + "22" }
-                  ]}
-                >
-                  <Text style={[styles.badgeText, { color: crowd.color }]}>
-                    {crowd.label}
-                  </Text>
+               <View
+                 style={[
+                   styles.badge,
+                   { backgroundColor: crowd.color + "22" }
+                 ]}
+               >
+                 <Text style={[styles.badgeText, { color: crowd.color }]}>
+                   {crowd.label}
+                 </Text>
 
-                  <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
-                    {item.face_count} / {item.capacity}
-                  </Text>
-                </View>
-              </View>
+                 <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
+                   {item.face_count} / {item.capacity}
+                 </Text>
+               </View> 
+             </View>
             );
           })}
         </ScrollView>
@@ -107,8 +115,8 @@ export default function Page() {
         {/* Bottom Button */}
         <View style={[styles.bottomBar, { backgroundColor: theme.card }]}>
           <Link href="/timetable" asChild>
-            <Pressable style={[styles.button, { backgroundColor: theme.primary }]}>
-              <Text style={[styles.buttonText, { color: theme.text }]}>Red vožnje</Text>
+            <Pressable style={{ ...styles.button, backgroundColor: theme.primary }}>
+              <Text style={styles.buttonText}>Red vožnje</Text>
             </Pressable>
           </Link>
         </View>
@@ -231,6 +239,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "800",
     letterSpacing: 0.4,
-    textAlign: "center"
+    textAlign: "center",
+    color: "white"
   },
 });
