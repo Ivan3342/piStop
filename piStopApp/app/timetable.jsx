@@ -1,47 +1,67 @@
+import BusCard from "@/components/BusCard";
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { ScrollView } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { Link, useRouter } from "expo-router";
 
 export default function timetable() {
+  const router = useRouter();
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("http://192.168.0.13/pistop/data.php")
+    fetch("http://bus.prvatehnicka.edu.rs/api/get_bus_lines.php")
       .then(res => res.json())
-      .then(json => setData(json))
+      .then(json => setData(json.data))
       .catch(err => console.log(err));
   }, []);
 
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Autobuske Linije</Text>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Red vožnje</Text>
 
-      {data.map(item => (
-        <View key={item.ID} style={styles.card}>
-          <View>
-            <Text style={styles.line}>{item.LINE_NUMBER}</Text>
-            <Text style={styles.name}>{item.LINE_START} - {item.LINE_END}</Text>
+            <Pressable
+              onPress={() => router.back()}
+              style={({ pressed }) => [
+                { opacity: pressed ? 0.5 : 1 },
+                styles.backButton
+              ]}
+            >
+              <Text style={styles.buttonText}>Nazad</Text>
+            </Pressable>
           </View>
-          <View>
-            <Text style={{ fontSize: 30 }}>›</Text>
-          </View>
+          <ScrollView contentContainerStyle={{ paddingBottom: 20, paddingHorizontal: 20 }}>
+
+
+            {data.map(item => (
+              <BusCard
+                key={item.line_name}
+                line_name={item.line_name}
+                line_start={item.line_start}
+                line_end={item.line_end}
+              />
+            ))}
+          </ScrollView>
         </View>
-      ))}
-    </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#f8f9fa",
-    padding: 20,
+    flex: 1
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: "600",
     color: "#111",
     marginBottom: 16,
+    marginTop: 20
   },
   card: {
     backgroundColor: "#ffffff",
@@ -67,7 +87,19 @@ const styles = StyleSheet.create({
     color: "#444",
     marginTop: 4,
   },
-  crowded: {
-
+  backButton: {
+    backgroundColor: "#2563eb",
+    padding: 10,
+    borderRadius: 14
+  },
+  buttonText: {
+    color: "white"
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20
   }
 });

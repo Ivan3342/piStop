@@ -61,8 +61,8 @@ export default function Page() {
 
         {/* Header */}
         <View style={styles.header}>
-          <View>
-            <Text style={[styles.title, { color: theme.text }]}>Zdravo, {user} 👋</Text>
+          <View style={{width: "90%"}}>
+            <Text style={[styles.title, { color: theme.text }]}>Dobrodošli u PiStop! 🚏</Text>
             <Text style={[styles.subtitle, { color: theme.subtext }]}>
               Informacije za javni prevoz na dlanu
             </Text>
