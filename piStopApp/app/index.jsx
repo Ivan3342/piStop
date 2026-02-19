@@ -9,8 +9,11 @@ import * as Progress from 'react-native-progress';
 export default function Page() {
   const [data, setData] = useState([]);
   const [dark, setDark] = useState(false);
+  const [expandedId, setExpandedId] = useState(null)
 
-  const user = "Ivan";
+  const toggleExpand = (id) => {
+    setExpandedId(expandedId === id ? null : id);
+  }
 
   const theme = dark ? darkTheme : lightTheme;
 
@@ -97,51 +100,66 @@ export default function Page() {
               let crowd = getCrowdStatus(item.occupancy_percent);
 
               return (
-
-                <View
-                  key={item.line_name + 1}
-                  style={[
-                    styles.card,
-                    { backgroundColor: theme.card, shadowColor: theme.shadow }
-                  ]}
-                >
-                  <View>
-                    <View style={styles.lineWrapper}>
-                      <Text style={[styles.line, { color: theme.primary }]}>
-                        {item.line_name}
-                      </Text>
-                      <Animated.View
-                        style={[
-                          styles.live,
-                          {
-                            opacity: pulseAnim,
-                            transform: [{ scale: pulseAnim }]
-                          }
-                        ]}
-                      />
-                    </View>
-
-                    <Text style={[styles.route, { color: theme.subtext }]}>
-                      {item.line_start} → {item.line_end}
-                    </Text>
-                  </View>
-
+                <Pressable onPress={() => toggleExpand(item.line_name)}>
                   <View
+                    key={item.line_name + 1}
                     style={[
-                      styles.badge,
-                      { backgroundColor: crowd.color + "22" }
+                      styles.card,
+                      { backgroundColor: theme.card, shadowColor: theme.shadow }
                     ]}
                   >
-                    <Text style={[styles.badgeText, { color: crowd.color }]}>
-                      {crowd.label}
-                    </Text>
+                    <View>
+                      <View style={styles.lineWrapper}>
+                        <Text style={[styles.line, { color: theme.primary }]}>
+                          {item.line_name}
+                        </Text>
+                        <Animated.View
+                          style={[
+                            styles.live,
+                            {
+                              opacity: pulseAnim,
+                              transform: [{ scale: pulseAnim }]
+                            }
+                          ]}
+                        />
+                      </View>
 
-                    <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
-                      {/* {item.face_count} / {item.capacity} */}       
-                      <Progress.Bar progress={item.occupancy_percent/100} width={70} borderWidth={0.5} color={crowd.color} />
-                    </Text>
+                      <Text style={[styles.route, { color: theme.subtext }]}>
+                        {item.line_start} → {item.line_end}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={[
+                        styles.badge,
+                        { backgroundColor: crowd.color + "22" }
+                      ]}
+                    >
+                      <Text style={[styles.badgeText, { color: crowd.color }]}>
+                        {crowd.label}
+                      </Text>
+
+                      {expandedId === item.line_name ? (
+                        <View>
+                          <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
+                            {item.face_count} / {item.capacity}
+                          </Text>
+                          <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
+                            Dolazak: {Math.round(Math.random()*100%10)} min
+                          </Text>
+                        </View>
+                      ) : (
+                        <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
+                          {/* {item.face_count} / {item.capacity} */}
+                          <Progress.Bar progress={item.occupancy_percent / 100} width={70} borderWidth={0.5} color={crowd.color} />
+                        </Text>
+                      )}
+
+                      
+                    </View>
+
                   </View>
-                </View>
+                </Pressable>
               );
             })}
         </ScrollView>
