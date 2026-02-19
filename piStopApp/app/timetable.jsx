@@ -52,23 +52,34 @@ export default function timetable() {
   );
 }
 
+const lightTheme = {
+  bg: "#f5f7fb",
+  card: "#ffffff",
+  text: "#0f172a",
+  subtext: "#64748b",
+  primary: "#2563eb",
+  shadow: "#000",
+};
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: lightTheme.bg,
+    color: lightTheme.text
   },
   title: {
     fontSize: 32,
     fontWeight: "600",
-    color: "#111",
+    color: lightTheme.text,
     marginBottom: 16,
     marginTop: 20
   },
   card: {
-    backgroundColor: "#ffffff",
+    backgroundColor: lightTheme.bg,
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
-    shadowColor: "#000",
+    shadowColor: lightTheme.shadow,
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 3,
@@ -80,15 +91,15 @@ const styles = StyleSheet.create({
   line: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#2563eb",
+    color: lightTheme.primary,
   },
   name: {
     fontSize: 16,
-    color: "#444",
+    color: lightTheme.subtext,
     marginTop: 4,
   },
   backButton: {
-    backgroundColor: "#2563eb",
+    backgroundColor: lightTheme.primary,
     padding: 10,
     borderRadius: 14
   },
@@ -103,3 +114,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   }
 });
+

@@ -31,7 +31,7 @@ export default function Page() {
           toValue: 1,
           duration: 800,
           useNativeDriver: true,
-        }),
+        }), 
       ])
     ).start();
   }, []);
