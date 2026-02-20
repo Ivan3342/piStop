@@ -140,11 +140,8 @@ export default function Page() {
 
                       {expandedId === item.line_name ? (
                         <View>
-                          <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
+                          <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center", fontSize: 14 }]}>
                             {item.face_count} / {item.capacity}
-                          </Text>
-                          <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
-                            Dolazak: {Math.round(Math.random()*100%10)} min
                           </Text>
                         </View>
                       ) : (
@@ -283,12 +280,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center"
   },
 
   badgeText: {
     fontSize: 12,
     fontWeight: "800",
-    textAlign: "center"
+    textAlign: "center",
+    paddingHorizontal: 10
   },
 
   bottomBar: {
