@@ -1,9 +1,9 @@
-import { Pressable, StyleSheet, Text, View, ScrollView, Switch, Button, Image, Animated } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { Link } from "expo-router";
-import { useState, useEffect, useRef } from "react";
-import { SvgXml } from 'react-native-svg'
+import { useEffect, useRef, useState } from "react";
+import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import * as Progress from 'react-native-progress';
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SvgXml } from 'react-native-svg';
 
 
 export default function Page() {
@@ -40,7 +40,7 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    fetch("http://bus.prvatehnicka.edu.rs/api/get_bus_lines.php")
+    fetch("https://bus.prvatehnicka.edu.rs/api/get_bus_lines.php")
       .then(res => res.json())
       .then(json => setData(json.data || []))
       .catch(err => console.log(err));
@@ -100,9 +100,8 @@ export default function Page() {
               let crowd = getCrowdStatus(item.occupancy_percent);
 
               return (
-                <Pressable onPress={() => toggleExpand(item.line_name)}>
+                <Pressable key={item.line_name} onPress={() => toggleExpand(item.line_name)}>
                   <View
-                    key={item.line_name + 1}
                     style={[
                       styles.card,
                       { backgroundColor: theme.card, shadowColor: theme.shadow }

@@ -1,16 +1,15 @@
 import BusCard from "@/components/BusCard";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { ScrollView } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Link, useRouter } from "expo-router";
 
 export default function timetable() {
   const router = useRouter();
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("http://bus.prvatehnicka.edu.rs/api/get_bus_lines.php")
+    fetch("https://bus.prvatehnicka.edu.rs/api/get_bus_lines.php")
       .then(res => res.json())
       .then(json => setData(json.data))
       .catch(err => console.log(err));
