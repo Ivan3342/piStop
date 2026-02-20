@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Animated, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import * as Progress from 'react-native-progress';
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from 'react-native-svg';
@@ -9,7 +9,8 @@ import { SvgXml } from 'react-native-svg';
 export default function Page() {
   const [data, setData] = useState([]);
   const [dark, setDark] = useState(false);
-  const [expandedId, setExpandedId] = useState(null)
+  const [expandedId, setExpandedId] = useState(null);
+  const [query, setQuery] = useState("");
 
   const toggleExpand = (id) => {
     setExpandedId(expandedId === id ? null : id);
@@ -58,6 +59,15 @@ export default function Page() {
     return { label: "Velika gužva", color: "#ef4444" };
   };
 
+  const filteredData = data.filter(item => {
+    const searchTerm = query.toLowerCase();
+    return (
+      item.line_name.toLowerCase().includes(searchTerm) ||
+      item.line_start.toLowerCase().includes(searchTerm) ||
+      item.line_end.toLowerCase().includes(searchTerm)
+    );
+  });
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
@@ -81,6 +91,13 @@ export default function Page() {
           </Pressable>
         </View>
 
+        <TextInput 
+          style={[styles.searchbar, {backgroundColor: theme.bg, color: theme.text, borderColor: theme.subtext}]}
+          placeholderTextColor={theme.subtext}
+          placeholder="🔍 Pretraga..."
+          onChangeText={(text) => {setQuery(text);}}
+        ></TextInput>
+
 
         {/* Content */}
         <ScrollView contentContainerStyle={styles.content}>
@@ -88,7 +105,7 @@ export default function Page() {
             Dolasci
           </Text>
 
-          {data.length === 0 ? (
+          {filteredData.length === 0 ? (
             <View style={{ alignItems: 'center', marginTop: 40 }}>
               <Text style={{ color: theme.subtext, fontSize: 18 }}>
                 Nema linija uskoro! 😔
@@ -96,7 +113,7 @@ export default function Page() {
             </View>) : (<View></View>)
           }
           {
-            data.map(item => {
+            filteredData.map(item => {
               let crowd = getCrowdStatus(item.occupancy_percent);
 
               return (
@@ -315,4 +332,18 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white"
   },
+  searchbar: {
+    alignSelf: "center",
+    justifyContent: "center",
+    width: "90%",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 4,
+    marginBottom: 10
+  }
 });
