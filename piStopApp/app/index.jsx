@@ -143,9 +143,6 @@ export default function Page() {
                           <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
                             {item.face_count} / {item.capacity}
                           </Text>
-                          <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
-                            Dolazak: {Math.round(Math.random()*100%10)} min
-                          </Text>
                         </View>
                       ) : (
                         <Text style={[styles.badgeText, { color: crowd.color, textAlign: "center" }]}>
@@ -282,7 +279,7 @@ const styles = StyleSheet.create({
   badge: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    borderRadius: 999,
+    borderRadius: 14,
   },
 
   badgeText: {

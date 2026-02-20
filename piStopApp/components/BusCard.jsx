@@ -1,16 +1,11 @@
-import { Pressable, StyleSheet, Text, View, ScrollView, Switch, Button, Image, Animated } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Link } from "expo-router";
-import { useState, useEffect, useRef } from "react";
-import { SvgXml } from 'react-native-svg'
-import * as Progress from 'react-native-progress';
+import { StyleSheet, Text, View } from "react-native";
 
 export default function BusCard(props) {
   return (
     <View style={styles.card}>
         <View>
             <Text style={styles.name}>{props.line_name}</Text>
-            <Text>{props.line_start} → {props.line_end}</Text>
+            <Text style={styles.line}>{props.line_start} → {props.line_end}</Text>
         </View>
         <Text>›</Text>
     </View>
@@ -19,7 +14,7 @@ export default function BusCard(props) {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: "#eeeeee",
+        backgroundColor: "#ffffff",
         marginBottom: 12,
         padding: 16,
         display: "flex",
@@ -36,5 +31,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "700",
         color: "#2563eb"
+    },
+    line: {
+        color: "#64748b",
     }
 })
