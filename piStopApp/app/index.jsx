@@ -294,15 +294,10 @@ const styles = StyleSheet.create({
   },
 
   badge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-<<<<<<< HEAD
-    borderRadius: 999,
+    paddingVertical: 7,
+    borderRadius: 14,
     alignItems: "center",
     justifyContent: "center"
-=======
-    borderRadius: 14,
->>>>>>> search-filter
   },
 
   badgeText: {
