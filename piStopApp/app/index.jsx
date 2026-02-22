@@ -1,10 +1,9 @@
 import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Animated, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from "react-native";
 import * as Progress from 'react-native-progress';
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from 'react-native-svg';
-
 
 export default function Page() {
   const [data, setData] = useState([]);
@@ -70,6 +69,11 @@ export default function Page() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar 
+        barStyle={dark ? 'light-content' : 'dark-content'}
+        translucent={true}
+        backgroundColor="transparent"
+      />
       <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
 
         {/* Header */}

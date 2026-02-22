@@ -1,7 +1,7 @@
 import BusCard from "@/components/BusCard";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StatusBar, StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function timetable() {
@@ -18,6 +18,11 @@ export default function timetable() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar
+        barStyle={'dark-content'}
+        translucent={true}
+        backgroundColor="transparent"
+      />
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
           <View style={styles.header}>
