@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Animated, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from "react-native";
+import { Animated, Pressable, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import * as Progress from 'react-native-progress';
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { SvgXml } from 'react-native-svg';
@@ -86,13 +86,13 @@ export default function Page() {
           </View>
 
           {/* Theme toggle */}
-          <Pressable onPress={() => setDark(!dark)}>
+          <TouchableOpacity onPress={() => setDark(!dark)}>
             <SvgXml
               width="28"
               height="28"
               xml={dark ? lightIcon : darkIcon}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
 
         <TextInput 
@@ -184,9 +184,9 @@ export default function Page() {
         {/* Bottom Button */}
         <View style={[styles.bottomBar, { backgroundColor: theme.card }]}>
           <Link href="/timetable" asChild>
-            <Pressable style={{ ...styles.button, backgroundColor: theme.primary }}>
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.primary }}>
               <Text style={styles.buttonText}>Red vožnje</Text>
-            </Pressable>
+            </TouchableOpacity>
           </Link>
         </View>
 
