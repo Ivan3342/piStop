@@ -44,7 +44,7 @@ export default function Page() {
       .then(res => res.json())
       .then(json => setData(json.data || []))
       .catch(err => console.log(err));
-  }, []);
+  }, [data]);
 
   const getCrowdStatus = (occupancy_percent) => {
     if (occupancy_percent <= 25) {
